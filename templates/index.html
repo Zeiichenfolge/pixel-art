@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title>Pixel Art</title>
+    <style>
+        body {
+            background-color: dimgrey;
+        }
+
+        #canvas {
+            position: relative;
+            width: 1000px;
+            height: 550px;
+            display: grid;
+            grid-template-columns: repeat(100, 1fr);
+            grid-column-gap: 0;
+            grid-row-gap: 0;
+            grid-gap: 0;
+            overflow: hidden;
+            background-color: lightgrey;
+        }
+
+        .pixel {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<header class="w3-bar w3-xlarge w3-dark-grey">
+    <a href="/"
+       class="w3-bar-item w3-mobile w3-button w3-green w3-hover-green w3-margin-right w3-margin-left">Pixel Art</a>
+    <a href="/auth/logout"
+       class="w3-bar-item w3-btn w3-right w3-mobile w3-red w3-hover-red w3-margin-right">Logout</a>
+</header>
+
+<label>
+    Pick a Color
+    <input type="color" id="color" class="w3-margin-top"/>
+</label>
+<div id="canvas" class="center-container w3-margin-top" style="position: absolute; left: 25%;"></div>
+
+<script>
+    const canvas = document.getElementById("canvas");
+    const colorInput = document.getElementById("color");
+    const shit = 0;
+    for (let i = 0; i < 10000; i++) {
+        const pixel = document.createElement("div");
+        pixel.classList.add("pixel");
+        pixel.id = `${i}`;
+        canvas.appendChild(pixel);
+    }
+    const pixels = document.querySelectorAll(".pixel");
+    pixels.forEach(pixel => {
+        pixel.addEventListener("click", () => {
+            const color = colorInput.value;
+            pixel.style.backgroundColor = color;
+            const message = JSON.stringify({
+                id: pixel.id,
+                color: color
+            })
+            const request = new XMLHttpRequest();
+            request.open("POST", "/updatePixel", false);
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(message);
+            console.log(message);
+        });
+    });
+
+    function load() {
+        console.log("load");
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let map = JSON.parse(this.responseText);
+                for (let key in map) {
+                    document.getElementById(key).style.backgroundColor = map[key];
+                }
+            }
+        }
+        request.open("GET", "/pixels", false);
+        request.send();
+    }
+
+    load();
+    setInterval(function() {
+        load();
+    }, 2000);
+
+</script>
+</body>
+</html>
