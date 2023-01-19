@@ -1,0 +1,6 @@
+{
+  "port": 5050,
+  "discordclientid": "id",
+  "discordclientsecret": "secret",
+  "discordclientsecretstate": "state"
+}
