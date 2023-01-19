@@ -33,10 +33,23 @@
 <header class="w3-bar w3-xlarge w3-dark-grey">
     <a href="/"
        class="w3-bar-item w3-mobile w3-button w3-green w3-hover-green w3-margin-right w3-margin-left">Pixel Art</a>
-    <a href="/auth/logout"
+    <a href="/logout"
        class="w3-bar-item w3-btn w3-right w3-mobile w3-red w3-hover-red w3-margin-right">Logout</a>
 </header>
 
+<div id="login-modal" class="w3-modal" style="display: block;">
+    <div class="w3-modal-content w3-center w3-animate-top w3-card-4">
+        <div class="w3-container w3-dark-grey">
+            <p class="w3-xlarge" id="replaceUserName">Please Login</p>
+            <a class="w3-btn w3-margin w3-hover-green w3-green w3-large" style="width: 55%;" href="/login">Login</a>
+        </div>
+    </div>
+</div>
+{{ if .LoggedIn }}
+    <script>
+        document.getElementById("login-modal").style.display = "none";
+    </script>
+{{ end }}
 <label>
     Pick a Color
     <input type="color" id="color" class="w3-margin-top"/>
@@ -70,6 +83,25 @@
         });
     });
 
+    const socket = new WebSocket("ws://zeichenfolge.xyz:5050/socket");
+
+    socket.onopen = event => {
+        console.log("Connected to Socket");
+    };
+
+    socket.onmessage = event => {
+        console.log(event.data);
+        const data = JSON.parse(event.data);
+        const color = data.color
+        const id = data.id
+        const pixel = document.getElementById(id);
+        pixel.style.backgroundColor = color;
+    };
+
+    socket.onclose = event => {
+        console.log("Disconnected from Socket");
+    };
+
     function load() {
         console.log("load");
         const request = new XMLHttpRequest();
@@ -86,10 +118,11 @@
     }
 
     load();
+    /*
     setInterval(function() {
         load();
     }, 2000);
-
+*/
 </script>
 </body>
 </html>
