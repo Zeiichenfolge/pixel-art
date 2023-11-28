@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="de">
 <head>
     <title>Pixel Art</title>
     <style>
@@ -98,8 +98,16 @@
         return false;
     };
 
+    socket.onerror = error => {
+        console.error(`WebSocket Error: ${error}`);
+    };
+
     socket.onclose = event => {
-        console.log("Disconnected from Socket");
+        if (event.wasClean) {
+            console.log(`Connection closed cleanly, code=${event.code}, reason=${event.reason}`);
+        } else {
+            console.error(`Connection died`);
+        }
     };
 
     function load() {

@@ -68,7 +68,6 @@ func routes() {
 			return
 		}
 		clients[ws] = true
-		defer ws.Close()
 	})
 	// Pixel set POST Call, used for pixel update
 	Engine.POST("/updatePixel", func(context *gin.Context) {
