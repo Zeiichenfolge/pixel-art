@@ -59,7 +59,6 @@
 <script>
     const canvas = document.getElementById("canvas");
     const colorInput = document.getElementById("color");
-    const shit = 0;
     for (let i = 0; i < 10000; i++) {
         const pixel = document.createElement("div");
         pixel.classList.add("pixel");
@@ -96,6 +95,7 @@
         const id = data.id
         const pixel = document.getElementById(id);
         pixel.style.backgroundColor = color;
+        return false;
     };
 
     socket.onclose = event => {
